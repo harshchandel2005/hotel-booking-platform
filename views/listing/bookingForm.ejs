@@ -1,0 +1,42 @@
+<!-- views/listing/bookingForm.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Form</title>
+    <link rel="stylesheet" href="/css/booking.css">
+</head>
+<body>
+    <div class="booking-container">
+        <h2>Make a Reservation</h2>
+        <form action="/booking" method="POST" class="booking-form">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required placeholder="Enter your full name">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+            </div>
+
+            <div class="form-group">
+              <label for="guests">guests</label>
+              <input type="number" id="guests" name="guests" required placeholder="Number of guests">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="checkIn">Check-in Date</label>
+                    <input type="date" id="checkIn" name="checkIn" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="checkOut">Check-out Date</label>
+                    <input type="date" id="checkOut" name="checkOut" required>
+                    <button type="submit">Book Now</button>
+                    </div
+              
+                </body>
+                </html>

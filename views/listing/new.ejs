@@ -1,0 +1,74 @@
+<%- layout('layouts/boilerplate') %>
+<body>
+    <form class="needs-validation" method="post" action="http://localhost:8080/listings/new" novalidate enctype= "multipart/form-data">
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" name = "title" class="form-control" required> 
+        <div class="valid-feedback">
+            Looks good! title 
+          </div>
+          <div class="invalid-feedback">
+            Enter title
+          </div>
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea name="description" class="form-control" required></textarea>
+        <div class="valid-feedback">
+            Looks good! description
+          </div>
+          <div class="invalid-feedback">
+            Enter description
+          </div>
+    </div>
+    <div class="mb-3" style="display: flex; gap : 10px">
+        <label for="price" class="form-label">Price</label>
+        <input type="number" name = "price" class="form-control" required>
+          <div class="invalid-feedback">
+            Enter  price
+          </div>
+        <label for="country" class="form-label">Country</label>
+        <input type="text" name = "country" class="form-control" required>
+        <div class="valid-feedback">
+            Looks good!  
+          </div>
+          <div class="invalid-feedback">
+            Enter country Name
+          </div>
+    </div>
+    <div class="mb-3">
+        <label for="locaion" class="form-label">Location</label>
+        <input type="text" name = "location" class="form-control" required>
+        <div class="valid-feedback">
+            Looks good! 
+          </div>
+          <div class="invalid-feedback">
+            Enter location
+          </div> 
+    </div>
+    <div class="mb-3">
+        <label for="url" class="form-label">Upload Image</label>
+        <input type="file" name="listing[image]" class="form-control" required>
+        <div class="valid-feedback">
+            Looks good!  
+          </div>
+          <div class="invalid-feedback">
+            Enter valid image url
+          </div>
+    </div>
+    <div class="mb-3">
+        <label for="fileName" class="form-label">File Name</label>
+        <input type="text" name="filename" required class="form-control">
+        <div class="valid-feedback">
+            Looks good! title 
+          </div>
+          <div class="invalid-feedback">
+            Enter image file name
+          </div>
+    </div>
+
+<button id="buttons" class="btn btn-primary">Submit</button>
+    </form>
+    <script src="/js/script.js"></script>
+</body>
+

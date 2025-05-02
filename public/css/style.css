@@ -1,0 +1,125 @@
+*{
+    margin: 0;padding: 0;
+}
+
+/* ----------- Nav Bar -----------  */
+.navbar{
+    height: 100%;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+background-color: red !important;
+}
+ .fa-regular{
+        color: #fe424d !important;
+        font-size: 2rem;
+ }
+ .navbar-link{
+    color: #222222 !important;
+ }
+
+
+ /* ----------Footer ------------- */
+ #footer {
+    background-color: white;
+    color: black;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  
+} 
+
+
+.social-icons a {
+    color: black;
+    margin: 0 1rem;
+    padding: 0.2rem;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+    color: #007bff;
+}
+.copyright, .privacy-terms {
+    padding: 0.2rem;
+    font-size: 0.8rem;
+    font-weight: 900;
+}
+a{
+    text-decoration: none !important;
+}
+
+.card{
+    border: none !important;
+    margin-bottom: 2rem;
+}
+.card-img-top {
+    width: 100%;               
+    height: 200px;             
+    object-fit: cover;         
+    border-radius: 1rem;       
+}
+
+/* ====Buttons */
+#buttons{
+    display: flex;
+    gap: 3rem;
+}
+
+/* ====Show style ==  */
+#show-card {
+    width: 100%;  
+    height: 100%;
+    margin: auto;
+    display: flex;  
+    flex-direction: column;
+    justify-content: center;  
+    align-items: center; 
+
+    .card-img-top {
+        width: 100%;
+        height: 10rem;
+        object-fit: cover;
+        border-radius: 1rem;
+    }
+    #buttons {
+        width: 100%;
+        display: flex;
+        gap: 10px;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    #show-card {
+        width: 60%;
+    }
+}
+
+/* Large devices (desktops, 1024px and up) */
+@media (min-width: 1024px) {
+    #show-card {
+        width: 60%;
+        .card-img-top {
+            width: 100%;
+            height: 17rem;
+            object-fit: cover;
+            border-radius: 1rem;
+            background-color: red;
+        }   
+    }
+}
+
+
+#review-box{
+    display: flex;
+    flex-wrap: wrap;
+    .card-body{ 
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+    
+}
+

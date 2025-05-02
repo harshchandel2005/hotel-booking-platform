@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hotel Suggestion Form</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7fa;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    label {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus {
+      border-color: #007bff;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    }
+
+    .card-group {
+      display: flex;
+      gap: 15px;
+      margin: 15px 0 30px 0;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      border: 2px solid #ddd;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      flex: 1;
+      min-width: 100px;
+      transition: all 0.3s ease-in-out;
+      background-color: #fdfdfd;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .card:hover {
+      border-color: #007bff;
+      background-color: #f0f8ff;
+    }
+
+    .card.selected {
+      border-color: #007bff;
+      background-color: #e0f0ff;
+      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+    }
+
+    .card input[type="radio"] {
+      display: none;
+    }
+
+    .card label {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      pointer-events: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #007bff;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <form action="/suggest-hotels" method="POST">
+    <h2>Find Hotel Suggestions</h2>
+
+    <label for="destination">Destination:</label>
+    <input type="text" id="destination" name="destination" required/>
+
+    <label>Budget:</label>
+    <div class="card-group">
+      <div class="card" onclick="selectCard(this)">
+        <input type="radio" name="budget" value="low" required/>
+        <label>Low</label>
+      </div>
+      <div class="card" onclick="selectCard(this)">
+        <input type="radio" name="budget" value="medium" required/>
+        <label>Medium</label>
+      </div>
+      <div class="card" onclick="selectCard(this)">
+        <input type="radio" name="budget" value="high" required/>
+        <label>High</label>
+      </div>
+    </div>
+
+    <label for="people">Number of People:</label>
+    <input type="number" id="people" name="people" required/>
+     
+     
+<label for="sourceAddress">Starting Location (Airport/City):</label>
+<input type="text" id="sourceAddress" name="sourceAddress" required placeholder="e.g., JFK Airport or New York City"/>
+
+    <label>Travel Party:</label>
+    <div class="card-group">
+      <div class="card" onclick="selectCard(this)">
+        <input type="radio" name="travelParty" value="solo" required/>
+        <label>Solo</label>
+      </div>
+      <div class="card" onclick="selectCard(this)">
+        <input type="radio" name="travelParty" value="couple" required/>
+        <label>Couple</label>
+      </div>
+      <div class="card" onclick="selectCard(this)">
+        <input type="radio" name="travelParty" value="family" required/>
+        <label>Family</label>
+      </div>
+      <div class="card" onclick="selectCard(this)">
+        <input type="radio" name="travelParty" value="friends" required/>
+        <label>Friends</label>
+      </div>
+    </div>
+
+    <button type="submit">Get Suggestions</button>
+  </form>
+
+  <script>
+    function selectCard(card) {
+      const group = card.parentElement;
+      const cards = group.querySelectorAll('.card');
+
+      cards.forEach(c => {
+        c.classList.remove('selected');
+        c.querySelector('input[type="radio"]').checked = false;
+      });
+
+      card.classList.add('selected');
+      card.querySelector('input[type="radio"]').checked = true;
+    }
+  </script>
+</body>
+</html>
+

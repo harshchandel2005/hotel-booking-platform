@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotel Suggestions for <%= formData.destination %></title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --success: #4cc9f0;
+      --danger: #f72585;
+      --light: #f8f9fa;
+      --dark: #212529;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7fa;
+      color: var(--dark);
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 2rem 0;
+      margin-bottom: 2rem;
+      text-align: center;
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .search-summary {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .hotel-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .hotel-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .hotel-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .hotel-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .hotel-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .price {
+      color: var(--success);
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .travel-expense {
+      color: var(--accent);
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .hotel-body {
+      padding: 1.5rem;
+    }
+
+    .section-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .attractions-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1.5rem 0;
+    }
+
+    .attractions-list li {
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed #eee;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .attractions-list li:last-child {
+      border-bottom: none;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--secondary);
+    }
+
+    .btn-outline {
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-outline:hover {
+      background-color: #f0f5ff;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    .travel-details {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      border: 1px solid #eee;
+    }
+
+    .travel-details .section-title {
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .travel-details p {
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    .travel-details i {
+      margin-right: 0.3rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .hotel-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Hotel Suggestions</h1>
+      <p>Found <%= hotels.length %> options for your trip to <%= formData.destination %></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="search-summary">
+      <h2>Your Search Criteria</h2>
+      <p>
+        <strong>Destination:</strong> <%= formData.destination %><br>
+        <strong>Budget:</strong> <%= formData.budget.charAt(0).toUpperCase() + formData.budget.slice(1) %><br>
+        <strong>Travelers:</strong> <%= formData.people %> <%= formData.people > 1 ? 'people' : 'person' %> (<%= formData.travellingWith %>)
+      </p>
+    </div>
+
+    <div class="hotel-grid">
+      <% hotels.forEach(hotel => { %>
+        <div class="hotel-card">
+          <div class="hotel-header">
+            <h3 class="hotel-name"><%= hotel.name %></h3>
+            <div class="price">
+              <i class="fas fa-tag"></i> <%= hotel.price %>
+            </div>
+          </div>
+
+          <div class="hotel-body">
+            <% if (searchParams && searchParams.from) { %>
+              <div class="travel-details">
+                <h4 class="section-title">
+                  <i class="fas fa-route"></i> Travel from <%= searchParams.from %>
+                </h4>
+                <% if (hotel.travelExpense) { %>
+                  <p><i class="fas fa-dollar-sign"></i> <%= hotel.travelExpense %></p>
+                <% } %>
+                <% if (hotel.travelTime) { %>
+                  <p><i class="fas fa-clock"></i> <%= hotel.travelTime %></p>
+                <% } %>
+                <% if (hotel.distance) { %>
+                  <p><i class="fas fa-map-marker-alt"></i> <%= hotel.distance %></p>
+                <% } %>
+              </div>
+            <% } %>
+
+            <% if (hotel.attractions.length > 0) { %>
+              <div class="section">
+                <h4 class="section-title">
+                  <i class="fas fa-map-marker-alt"></i> Nearby Attractions
+                </h4>
+                <ul class="attractions-list">
+                  <% hotel.attractions.forEach(attraction => { %>
+                    <li><i class="fas fa-landmark"></i> <%= attraction %></li>
+                  <% }) %>
+                </ul>
+              </div>
+            <% } %>
+
+            <div class="action-buttons">
+              <% if (hotel.link) { %>
+                <a href="<%= hotel.link %>" target="_blank" rel="noopener" class="btn btn-outline">
+                  <i class="fas fa-external-link-alt"></i> Hotel Website
+                </a>
+              <% } %>
+
+              <% if (hotel.bookingLink) { %>
+                <a href="<%= hotel.bookingLink %>" target="_blank" rel="noopener" class="btn btn-primary">
+                  <i class="fas fa-bookmark"></i> Book Now
+                </a>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <div class="back-link">
+      <a href="/form" class="btn btn-outline">
+        <i class="fas fa-arrow-left"></i> Modify Search
+      </a>
+    </div>
+  </main>
+</body>
+</html>
