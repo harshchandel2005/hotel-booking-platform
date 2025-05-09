@@ -85,6 +85,34 @@
   </div>
 </div>
 
+
+
+
+
+
+<div class="container mt-4">
+  <div class="row" id="searchResults">
+    <% allData.forEach(data => { %>
+      <div class="col-md-4">
+        <div class="card property-card">
+          <div class="card-body">
+            <!-- other listing details -->
+          </div>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+</div>
+
+<!-- Include the search JS at the bottom -->
+
+
+
+
+
+
+
+
 <script>
   let tax_toggle = document.getElementById('switchCheckDefault');
   tax_toggle.addEventListener('change', function() {
@@ -99,4 +127,5 @@
   }
   });   
 </script>
+<script src="/js/search.js"></script>
 

@@ -113,3 +113,28 @@ module.exports.updateListing = async (req, res, next) => {
         next(err); 
       }
     }
+    // In your index method or wherever you fetch listings
+// In your listing controller (controllers/listing.js)
+module.exports.index = async (req, res) => {
+  try {
+    const { search } = req.query;
+    let query = {};
+    
+    if (search) {
+      query.title = { $regex: search, $options: 'i' };
+    }
+
+    const allData = await Listing.find(query);
+    
+    res.render('listing/index', { 
+      allData,
+      search: search || '',
+      noResults: search && allData.length === 0 // Add this flag
+    });
+    
+  } catch (err) {
+    console.error(err);
+    req.flash('error', 'Search failed');
+    res.redirect('/listings');
+  }
+};
