@@ -1,128 +1,88 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-require('dotenv').config();
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+// Initialize the Gemini API
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 class GeminiModel {
-    constructor() {
-        this.genAi = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        this.model = this.genAi.getGenerativeModel({ 
-            model: "gemini-1.5-flash",
-            generationConfig: {
-                temperature: 0.7,
-                topP: 0.9,
-                maxOutputTokens: 2000
-            }
-        });
+  static async generateHotelSuggestions(destination, budget, people, travellingWith, bookingDate, sourceAddress) {
+    try {
+      // Get the generative model (use the model you have access to)
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+      const prompt = `
+        Act as a travel planning expert. Suggest 3-5 hotels in ${destination} that match these criteria:
+        - Budget: ${budget}
+        - Travelers: ${people} ${people > 1 ? 'people' : 'person'} (${travellingWith})
+        - Travel date: ${bookingDate}
+        - Starting from: ${sourceAddress}
+
+        For each hotel, provide:
+        1. Name
+        2. Price range (per night)
+        3. Travel time and distance from ${sourceAddress}
+        4. Estimated travel expenses from ${sourceAddress}
+        5. 3-5 nearby attractions
+        6. Booking link (if available)
+        7. Official website link (if available)
+
+        Format the response as a JSON-like array of objects with these properties:
+        - name
+        - price
+        - travelTime
+        - distance
+        - travelExpense
+        - attractions (array)
+        - bookingLink
+        - link
+
+        Return only the JSON-like array, nothing else.
+      `;
+
+      console.log("Sending prompt to Gemini:", prompt); // Debug log
+
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+
+      console.log("Received response from Gemini:", text); // Debug log
+
+      return text;
+    } catch (error) {
+      console.error("Error generating suggestions:", error);
+      throw new Error(`Failed to generate suggestions: ${error.message}`);
     }
+  }
 
-    async generateHotelSuggestions(destination, budget, people, travelParty, bookingDate, sourceAddress) {
-        let budgetRange;
-        switch (budget) {
-            case 'low': budgetRange = "$50 - $100 per night"; break;
-            case 'medium': budgetRange = "$100 - $200 per night"; break;
-            case 'high': budgetRange = "$200+ per night"; break;
-            default: budgetRange = "a reasonable price";
-        }
+  static parseHotelResponse(responseText) {
+    try {
+      // Clean the response text to make it valid JSON
+      const cleanedText = responseText
+        .replace(/```json/g, '')
+        .replace(/```/g, '')
+        .trim();
 
-        const prompt = `
-            Suggest 3 to 5 hotels in ${destination} that are suitable for ${people} people traveling as ${travelParty}, 
-            with a potential booking date around ${bookingDate}. The budget range is ${budgetRange}. 
-            
-            For each hotel, provide:
-            1. Hotel name
-            2. Price per night (format: "$X - $Y" or "$X+")
-            3. 1-2 nearby attractions (comma separated)
-            4. Official hotel website link
-            5. Travel expense estimate from ${sourceAddress} (include both taxi and public transport options)
-            6. Direct booking link from reputable platform (Booking.com, Expedia, etc.)
-            
-            Present each hotel in this exact format:
-            Hotel Name: [Full Hotel Name]
-            Price: [Price Range]
-            Attractions: [Attraction1, Attraction2]
-            Link: [Hotel Website URL]
-            Travel Expense: [From ${sourceAddress}: Taxi $XX-$YY, Public Transport $ZZ]
-            Booking Link: [Booking Platform URL]
-            
-            Important:
-            - Calculate travel costs specifically from ${sourceAddress}
-            - Include distance and estimated travel time
-            - Provide realistic transportation options
-            - Ensure all 6 elements are included for each hotel
-        `;
+      const hotels = JSON.parse(cleanedText);
+      
+      // Validate and format the hotels array
+      if (!Array.isArray(hotels)) {
+        throw new Error('Invalid response format: Expected array of hotels');
+      }
 
-        try {
-            const result = await this.model.generateContent(prompt);
-            const response = await result.response;
-            
-            let responseText;
-            if (typeof response.text === 'function') {
-                responseText = await response.text();
-            } else {
-                responseText = response.toString();
-            }
-
-            if (!responseText) {
-                throw new Error("Empty response from API");
-            }
-
-            return responseText;
-        } catch (error) {
-            console.error("Error generating suggestions:", error);
-            throw new Error(`Failed to generate suggestions: ${error.message}`);
-        }
+      return hotels.map(hotel => ({
+        name: hotel.name || 'Unknown Hotel',
+        price: hotel.price || 'Price not available',
+        travelTime: hotel.travelTime || 'Time not specified',
+        distance: hotel.distance || 'Distance not specified',
+        travelExpense: hotel.travelExpense || 'Cost not specified',
+        attractions: Array.isArray(hotel.attractions) ? hotel.attractions : [],
+        bookingLink: hotel.bookingLink || null,
+        link: hotel.link || null
+      }));
+    } catch (error) {
+      console.error("Error parsing response:", error);
+      throw new Error(`Failed to parse hotel suggestions: ${error.message}`);
     }
-
-    parseHotelResponse(responseText) {
-        if (!responseText || typeof responseText !== 'string') {
-            console.error("Invalid response received:", responseText);
-            return [];
-        }
-
-        const hotels = [];
-        const hotelBlocks = responseText.split('\n\n').filter(block => block.trim());
-
-        hotelBlocks.forEach(block => {
-            const lines = block.split('\n').map(line => line.trim()).filter(line => line);
-            const hotel = {
-                name: '',
-                price: '',
-                attractions: [],
-                link: '',
-                travelExpense: '',
-                bookingLink: ''
-            };
-
-            lines.forEach(line => {
-                if (line.startsWith('Hotel Name:')) {
-                    hotel.name = line.replace('Hotel Name:', '').trim();
-                } else if (line.startsWith('Price:')) {
-                    hotel.price = line.replace('Price:', '').trim();
-                } else if (line.startsWith('Attractions:')) {
-                    hotel.attractions = line.replace('Attractions:', '').split(',').map(a => a.trim());
-                } else if (line.startsWith('Link:')) {
-                    hotel.link = this.sanitizeUrl(line.replace('Link:', '').trim());
-                } else if (line.startsWith('Travel Expense:')) {
-                    hotel.travelExpense = line.replace('Travel Expense:', '').trim();
-                } else if (line.startsWith('Booking Link:')) {
-                    hotel.bookingLink = this.sanitizeUrl(line.replace('Booking Link:', '').trim());
-                }
-            });
-
-            if (hotel.name && hotel.price) {
-                hotels.push(hotel);
-            }
-        });
-
-        return hotels;
-    }
-
-    sanitizeUrl(url) {
-        if (!url) return '';
-        if (!url.startsWith('http')) {
-            return `https://${url}`;
-        }
-        return url;
-    }
+  }
 }
 
-module.exports = new GeminiModel();
+module.exports = GeminiModel;
