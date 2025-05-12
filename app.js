@@ -18,6 +18,8 @@ const User = require('./models/user.js');
 const userRouter = require('./routes/users.js');
 const aiRoutes = require('./routes/aiRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
+const adminRoutes = require('./routes/admin');
+
 
 app.use(methodOverride('_method'))
 app.use(express.json())
@@ -66,6 +68,7 @@ app.use("/listings/:id/reviews" ,review)
 app.use("/" ,userRouter);
 app.use("/",aiRoutes);
 app.use('/', bookingRoutes);
+app.use('/admin', adminRoutes);
 
 
 

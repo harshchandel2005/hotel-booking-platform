@@ -19,6 +19,14 @@ router.route('/login')
 
 // Log out route
 router.get('/logout',userController.logOut )
-
+router.post('/login', passport.authenticate('local', {
+  failureFlash: true,
+  failureRedirect: '/login'
+}), (req, res) => {
+  if (req.user.isAdmin) {
+    req.session.isAdmin = true; // Set admin flag in session
+  }
+  res.redirect('/');
+});
 
  module.exports = router;

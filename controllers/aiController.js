@@ -49,7 +49,7 @@ const aiController = {
         sourceAddress.trim()
       );
       
-      console.log("Response received, parsing..."); // Debug log
+      // console.log("Response received, parsing..."); // Debug log
       
       const hotels = geminiModel.parseHotelResponse(responseText);
 
@@ -57,7 +57,7 @@ const aiController = {
         throw new Error('No hotels found matching your criteria');
       }
 
-      console.log("Rendering suggestions with", hotels.length, "hotels"); // Debug log
+      // console.log("Rendering suggestions with", hotels.length, "hotels"); // Debug log
 
       res.render('ai/suggestions', { 
         hotels,
