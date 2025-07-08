@@ -79,7 +79,7 @@ class GeminiModel {
         link: hotel.link || null
       }));
     } catch (error) {
-      console.error("Error parsing response:", error);
+      console.error("Error parsing response:", error); // see that the error is logged
       throw new Error(`Failed to parse hotel suggestions: ${error.message}`);
     }
   }
