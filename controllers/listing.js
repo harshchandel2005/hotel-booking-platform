@@ -1,10 +1,5 @@
 const Listing = require("../models/listing");
 
-module.exports.index = async(req,res,next) =>{
-    let allData = await Listing.find({});
-        res.render("./listing/index.ejs",{allData});
-    };
-
 module.exports.renderNewForm = (req,res,next) =>{
     res.render('./listing/new.ejs');
   };
@@ -23,7 +18,12 @@ module.exports.renderNewForm = (req,res,next) =>{
     if(!data){
       req.flash("error" , "Listing not found");
       return res.redirect("/listings");
-    } 
+    }
+    
+    // Ensure owner exists before rendering
+    if (!data.owner) {
+      data.owner = { username: "Unknown User" };
+    }
     
     res.render("./listing/show.ejs" , {data})
     };
@@ -113,10 +113,11 @@ module.exports.updateListing = async (req, res, next) => {
         next(err); 
       }
     }
-    // In your index method or wherever you fetch listings
-// In your listing controller (controllers/listing.js)
-module.exports.index = async (req, res) => {
+
+module.exports.index = async (req, res, next) => {
   try {
+    console.log("Fetching listings...");
+    
     const { search } = req.query;
     let query = {};
     
@@ -124,17 +125,21 @@ module.exports.index = async (req, res) => {
       query.title = { $regex: search, $options: 'i' };
     }
 
-    const allData = await Listing.find(query);
+    // Set a timeout for database query
+    const queryPromise = Listing.find(query).maxTimeMS(5000); // 5 second timeout
+    const allData = await queryPromise;
+    
+    console.log(`Found ${allData.length} listings`);
     
     res.render('listing/index', { 
       allData,
       search: search || '',
-      noResults: search && allData.length === 0 // Add this flag
+      noResults: search && allData.length === 0
     });
     
   } catch (err) {
-    console.error(err);
-    req.flash('error', 'Search failed');
-    res.redirect('/listings');
+    console.error("Index Error:", err);
+    req.flash('error', 'Failed to load listings');
+    res.redirect('/');
   }
 };

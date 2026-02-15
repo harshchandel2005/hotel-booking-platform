@@ -1,28 +1,21 @@
-const mongoose = require("mongoose");
-const allData = require("./data.js");
-const listing = require("../models/listing.js");
+require("dotenv").config();
+const connectDB = require("../db");
+const Listing = require("../models/listing");
+const allData = require("./data");
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/project";
+const seedDB = async () => {
+  await connectDB();
 
-main()
-  .then(() => {
-    console.log("connected to DB");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+  await Listing.deleteMany({});
+  await Listing.insertMany(
+    allData.data.map(obj => ({
+      ...obj,
+      owner: "67f0768f254c9d8ef1c30b78"
+    }))
+  );
 
-async function main() {
-  await mongoose.connect(MONGO_URL);
-}
-
-const addData = async () => {
-  await listing.deleteMany({}); // 🔥 Clears old listings
-  allData.data = allData.data.map((obj) => ({ ...obj, owner: "67f0768f254c9d8ef1c30b78" }));
-  await listing.insertMany(allData.data);
-  console.log("data is saved");
+  console.log("🌱 Data seeded");
+  process.exit();
 };
- 
-addData();
 
-
+seedDB();

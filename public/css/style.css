@@ -2,12 +2,15 @@
     margin: 0;padding: 0;
 }
 
+body {
+    padding-bottom: 200px;
+}
+
 /* ----------- Nav Bar -----------  */
 .navbar{
-    height: 100%;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-background-color: red !important;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    background-color: white !important;
 }
  .fa-regular{
         color: #fe424d !important;

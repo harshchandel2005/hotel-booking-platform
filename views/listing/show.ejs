@@ -5,7 +5,7 @@
         <img src="<%= data.image.url %>" class="card-img-top" alt="...">
         <div class="card-body">
           <p class="card-text"><%= data.title  %> </p>
-         <p class="card-text"><b>Owned By :</b> <i><%= data.owner.username %></i></p>
+         <p class="card-text"><b>Owned By :</b> <i><%= data.owner ? data.owner.username : 'Unknown' %></i></p>
           <p class="card-text"> <b>Description :</b>  &nbsp;<%= data.description  %> </p>
           <p class="card-text"><b>Price :</b>  &nbsp; &#8377;<%= data.price.toLocaleString()  %> </p>
           <p class="card-text"><b>State :</b>  &nbsp;<%= data.location  %> </p>

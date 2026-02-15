@@ -1,0 +1,52 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="jumbotron">
+        <h1 class="display-4">Welcome to AiTripPlanner! 🌍</h1>
+        <p class="lead">Plan your next adventure with AI-powered travel suggestions</p>
+        <hr class="my-4">
+        
+        <% if (currUser) { %>
+          <p>Welcome back, <strong><%= currUser.username %></strong>!</p>
+          <a class="btn btn-primary btn-lg" href="/listings" role="button">Browse Listings</a>
+          <a class="btn btn-success btn-lg" href="/listings/new" role="button">Create New Listing</a>
+          <a class="btn btn-info btn-lg" href="/form" role="button">Get AI Suggestions</a>
+        <% } else { %>
+          <p>Start planning your trip today!</p>
+          <a class="btn btn-primary btn-lg" href="/signup" role="button">Sign Up</a>
+          <a class="btn btn-secondary btn-lg" href="/login" role="button">Log In</a>
+          <a class="btn btn-info btn-lg" href="/listings" role="button">Browse Listings</a>
+        <% } %>
+      </div>
+      
+      <div class="row mt-5">
+        <div class="col-md-4 text-center">
+          <h5>🏨 Explore</h5>
+          <p>Discover beautiful travel listings from around the world</p>
+        </div>
+        <div class="col-md-4 text-center">
+          <h5>📝 Share</h5>
+          <p>Share your favorite places and help other travelers</p>
+        </div>
+        <div class="col-md-4 text-center">
+          <h5>🤖 AI Powered</h5>
+          <p>Get personalized travel suggestions powered by AI</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .jumbotron {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 2rem;
+  }
+  
+  .btn {
+    margin: 5px;
+  }
+</style>
